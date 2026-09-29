@@ -56,6 +56,10 @@ const StatusRow = (props: { status?: Status }) => {
   );
 };
 
+StatusRow.defaultProps = {
+  status: undefined,
+};
+
 const Popup = () => {
   const [books, setBooks] = useState<Book[]>([]);
   const [status, setStatus] = useState<Status|undefined>(undefined);
