@@ -75,7 +75,12 @@ module.exports = {
         exclude: /node_modules/,
         use: [
           babelLoader,
-          'ts-loader',
+          {
+            loader: 'ts-loader',
+            options: {
+              transpileOnly: true,
+            },
+          },
         ],
       },
       {
