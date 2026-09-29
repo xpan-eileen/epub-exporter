@@ -24,20 +24,20 @@ module.exports = {
   output: { filename: '[name].js', path: appDist },
   devtool: isProduction ? false : 'inline-source-map',
   plugins: [
-    new CopyWebpackPlugin([
-      { from: path.join(appSrc, 'manifest.json'), to: path.join(appDist, 'manifest.json'), transform: transformManifest },
-    ]),
+    new CopyWebpackPlugin({
+      patterns: [
+        {
+          from: path.join(appSrc, 'manifest.json'),
+          to: path.join(appDist, 'manifest.json'),
+          transform: transformManifest,
+        },
+      ],
+    }),
     new HtmlWebpackPlugin({ filename: 'popup.html', template: path.join(appSrc, 'popup.html'), chunks: ['popup'] }),
     new StylelintWebpackPlugin({ context: appSrc }),
   ],
   module: {
     rules: [
-      /**
-       * ESLINT
-       * First, run the linter.
-       * It's important to do this before Babel processes the JS.
-       * Only testing .ts and .tsx files (React code)
-       */
       {
         test: /\.(ts|js)x?$/,
         enforce: 'pre',
@@ -46,9 +46,10 @@ module.exports = {
       },
       {
         test: /\.(css|sass|scss)$/,
-        loader: [
-          { loader: 'style-loader' },
-          { loader: 'css-loader',
+        use: [
+          'style-loader',
+          {
+            loader: 'css-loader',
             options: {
               sourceMap: isDevelopment,
               importLoaders: 2,
@@ -59,15 +60,19 @@ module.exports = {
             loader: 'postcss-loader',
             options: {
               sourceMap: isDevelopment,
-              ident: 'postcss',
-              plugins: () => [
-                require('postcss-import')({ root: appPath }),
-                require('postcss-preset-env')(),
-                require('cssnano')(),
-              ],
+              postcssOptions: {
+                plugins: [
+                  require('postcss-import')({ root: appPath }),
+                  require('postcss-preset-env')(),
+                  require('cssnano')(),
+                ],
+              },
             },
           },
-          { loader: 'sass-loader', options: { sourceMap: isDevelopment } },
+          {
+            loader: 'sass-loader',
+            options: { sourceMap: isDevelopment, implementation: require('sass') },
+          },
         ],
       },
       {
@@ -78,7 +83,9 @@ module.exports = {
           {
             loader: 'ts-loader',
             options: {
-              transpileOnly: true,
+              compilerOptions: {
+                module: 'ES2020',
+              },
             },
           },
         ],
@@ -90,7 +97,7 @@ module.exports = {
       },
       {
         test: /\.(woff|woff2|eot|ttf|otf|png|svg|jpg|gif)$/,
-        use: { loader: 'file-loader' },
+        type: 'asset/resource',
       },
     ],
   },
