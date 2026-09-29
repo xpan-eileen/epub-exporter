@@ -8,7 +8,8 @@
     "allowJs": true,
     "moduleResolution": "node",
     "allowSyntheticDefaultImports": true,
-    "types" : [
+    "skipLibCheck": true,
+    "types": [
       "chrome",
       "jest"
     ],
@@ -17,5 +18,6 @@
       "@src/*": ["./src/*"],
       "@test/*": ["./test/*"]
     }
-  }
+  },
+  "exclude": ["node_modules"]
 }
