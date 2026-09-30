@@ -9,7 +9,6 @@
     "moduleResolution": "node",
     "allowSyntheticDefaultImports": true,
     "types" : [
-      "chrome",
       "jest"
     ],
     "baseUrl": ".",

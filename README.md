@@ -1,32 +1,35 @@
-# Epub exporter
+# EPUB Exporter
 
-## Description
-本專案僅為學習使用，並不負責他人使用本工具造成的任何侵權問題。
+A small Chrome Manifest V3 extension for validating and saving a copy of an EPUB you already have.
 
-## Licence
-WTFPL. 
+## Safe, supported workflow
 
-## Usage
+1. Use the bookstore's official download or export feature to obtain an EPUB file.
+2. Open the extension, select that local `.epub` file, and wait for validation.
+3. Save a checked copy from the extension.
+
+The extension checks the ZIP/EPUB package structure and rejects files containing `META-INF/encryption.xml`. This is a conservative format check, not a guarantee of ownership or legal status; only use files you are authorized to export and keep. It does not access bookstore accounts, private reader APIs, protected content, or DRM keys, and it does not decrypt or remove DRM.
+
+Readmoo reader-page extraction is **not supported**. The former implementation called a private reader API and has been removed. If Readmoo or another provider offers a documented official DRM-free EPUB export, use that provider flow first and then validate the resulting local file with this extension. The extension does not automate provider-specific exports.
+
+## Build and install
+
 ```bash
 yarn install
-
 yarn build-prod
-
-# And install extension from ./dist/ folder
 ```
 
-## Screenshot
-![Screenshot](screenshot.png)
+In Chrome, open `chrome://extensions`, enable Developer mode, choose **Load unpacked**, and select the generated `dist/` folder.
 
-## TODO
-- [x] Add eslint
-- [x] Add typescript
-- [x] Add webpack
-- [x] Add jest
-- [x] Implement exporter of `readmoo.com`
-- [ ] Implement exporter of `books.com.tw`
-- [ ] Handle download Error
-- [ ] Add test for exporters
-- [ ] CI/CD
-- [ ] ...???
+The extension uses Manifest V3 and requests no host, browsing, storage, or download permissions. The selected file remains local to the popup; saving a copy uses the browser's normal download action.
 
+## Development
+
+```bash
+yarn test --runInBand
+yarn build
+```
+
+## License
+
+MIT (see `package.json`).

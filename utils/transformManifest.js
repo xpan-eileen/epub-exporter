@@ -1,7 +1,7 @@
 const path = require('path');
 
 const { appPath } = require('./paths');
-const { npmPackage, isDevelopment } = require('./env');
+const { npmPackage } = require('./env');
 
 const parseJsonFromBuffer = (buffer, filePath) => {
   try {
@@ -26,12 +26,6 @@ const transformManifest = (buffer, filePath) => {
     description,
     author,
   };
-
-  // Because Webpack use eval to execute code when development,
-  // add CSP policy to prevent `Uncaught EvalError`
-  if (isDevelopment) {
-    newManifest['content_security_policy'] = "script-src 'self' 'unsafe-eval'; object-src 'self'";
-  }
 
   return JSON.stringify(newManifest, null, 2);
 };
